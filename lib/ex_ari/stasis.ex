@@ -102,6 +102,7 @@ defmodule ARI.Stasis do
       :connected,
       :url,
       :status,
+      :type,
       :channel_supervisor,
       reconnection_attempts: 0,
       app: %{}
