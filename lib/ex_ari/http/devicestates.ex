@@ -10,39 +10,67 @@ defmodule ARI.HTTP.Devicestates do
   alias ARI.HTTPClient.Response
   use ARI.HTTPClient, "/deviceStates"
 
+  @doc """
+  Retrieve list of ARI controlled device states
+  """
   @spec list :: Response.t()
   def list do
     GenServer.call(__MODULE__, :list)
   end
 
+  @doc """
+  Retrieve the current state of a device
+
+  ## Parameters
+    name: String (UTF-8) that represents the name of the device
+  """
   @spec get(String.t()) :: Response.t()
   def get(name) do
     GenServer.call(__MODULE__, {:get, name})
   end
 
-  @spec update(String.t(), String.t()) :: Response.t()
-  def update(name, device_state) do
-    GenServer.call(__MODULE__, {:update, name, device_state})
+  @doc """
+  Change the current state of a device controlled by ARI
+
+  ## Parameters
+    name: String (UTF-8) that represents the name of the device
+    payload: map of the parameters and values to pass to Asterisk
+      deviceState: (required) Device state value
+        Allowed values: NOT_INUSE, INUSE, BUSY, INVALID, UNAVAILABLE, RINGING, RINGINUSE, ONHOLD
+  """
+  @spec update(String.t(), map()) :: Response.t()
+  def update(name, %{deviceState: _} = payload) do
+    GenServer.call(__MODULE__, {:update, name, payload})
   end
 
+  @doc """
+  Destroy a device-state controlled by ARI
+
+  ## Parameters
+    name: String (UTF-8) that represents the name of the device
+  """
   @spec delete(String.t()) :: Response.t()
   def delete(name) do
     GenServer.call(__MODULE__, {:delete, name})
   end
 
+  @impl true
   def handle_call(:list, from, state) do
     {:noreply, request("GET", "", from, state)}
   end
 
+  @impl true
   def handle_call({:get, name}, from, state) do
     {:noreply, request("GET", "/#{name}", from, state)}
   end
 
-  def handle_call({:update, name, device_state}, from, state) do
+  @impl true
+  def handle_call({:update, name, payload}, from, state) do
     {:noreply,
-     request("PUT", "/#{name}?#{encode_params(%{deviceState: device_state})}", from, state)}
+     request("PUT", "/#{name}?#{encode_params(payload)}", from, state)}
   end
 
+  @impl true
   def handle_call({:delete, name}, from, state) do
     {:noreply, request("DELETE", "/#{name}", from, state)}
   end
