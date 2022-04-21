@@ -78,11 +78,11 @@ defmodule ARI.HTTP.Bridges do
         Allows comma seperated values
       role: Channel's role in the bridge
       absorbDTMF: Absorb DTMF coming from this channel, preventing it to pass through to the bridge
-        Allowed values: 'false', 'true'
+        Allowed values: 'false', 'true', 'yes', 'no'
       mute: Mute audio from this channel, preventing it to pass through to the bridge
-        Allowed values: 'false', 'true'
+        Allowed values: 'false', 'true', 'yes', 'no'
       inhibitConnectedLineUpdates: Do not present the identity of the newly connected channel to other bridge members
-        Allowed values: 'false', 'true'
+        Allowed values: 'false', 'true', 'yes', 'no'
   """
   @spec add_channels(String.t(), map()) :: Response.t()
   def add_channels(id, %{channel: _} = payload) do
@@ -190,7 +190,7 @@ defmodule ARI.HTTP.Bridges do
         Default: fail
         Allowed values: fail, overwrite, append
       beep: Play beep when recording begins
-        Allowed values: 'false', 'true'
+        Allowed values: 'false', 'true', 'yes', 'no'
       terminateOn: DTMF input to terminate recording
         Default: none
         Allowed values: none, any, *, #

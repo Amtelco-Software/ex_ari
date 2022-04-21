@@ -354,7 +354,7 @@ defmodule ARI.HTTP.Channels do
         Default: fail
         Allowed values: fail, overwrite, append
       beep: Play beep when recording begins
-        Allowed values: 'false', 'true'
+        Allowed values: 'false', 'true', 'yes', 'no'
       terminateOn: DTMF input to terminate recording
         Default: none
         Allowed valued: none, any, *, #
@@ -401,7 +401,7 @@ defmodule ARI.HTTP.Channels do
         Default: none
         Allowed values: none, both, out, in
         in = audio coming from the channel
-        out = autio going to the channel
+        out = audio going to the channel
       whisper: Direction of audio to whisper into
         Default: none
         Allowed values: none, both, out, in
