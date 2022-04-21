@@ -46,9 +46,9 @@ defmodule ARI.Transfer do
 
   def init(state) do
     bridge_id = UUID.uuid4()
-    Bridges.create(bridge_id, bridge_id, ["mixing", "dtmf_events"])
+    Bridges.create(%{bridgeId: bridge_id, name: bridge_id, type: "mixing, dtmf_events"})
 
-    Bridges.add_channels(bridge_id, [state.channel, state.incoming_channel])
+    Bridges.add_channels(bridge_id, %{channel: "#{state.channel},#{state.incoming_channel}"})
     {:ok, state}
   end
 
