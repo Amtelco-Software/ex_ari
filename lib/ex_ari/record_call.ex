@@ -58,24 +58,30 @@ defmodule ARI.RecordCall do
   def init(state) do
     Channels.record(
       state.channel,
-      state.channel,
-      "wav",
-      state.max_duration,
-      state.max_silence,
-      "overwrite",
-      "no",
-      state.terminate_on
+      %{
+        name: state.channel,
+        format: "wav",
+        maxDurationSeconds: state.max_duration,
+        maxSilenceSeconds: state.max_silence,
+        ifExists: "overwrite",
+        beep: "no",
+        terminateOn: state.terminate_on
+      }
     )
 
     {:ok, state}
   end
 
   def handle_info({:ari, %{type: "RecordingFinished"}}, state) do
-    Events.create("CommandCaptured", state.app, ["channel:#{state.incoming_channel}"], %{
+    Events.create("CommandCaptured",
+      %{
+        application: state.app,
+        source: "channel:#{state.incoming_channel}"
+      },
       variables: %{recording: state.channel}
-    })
+    )
 
-    Channels.hangup(state.channel)
+    Channels.hangup(state.channel, %{reason_code: 16, reason: "normal"})
 
     {:noreply, state}
   end
