@@ -4,12 +4,12 @@ defmodule ExAri.MixProject do
   def project do
     [
       app: :ex_ari,
-      version: "0.1.2",
-      elixir: "~> 1.7",
+      version: "0.1.3",
+      elixir: "~> 1.13",
       package: package(),
       description: description(),
       name: "ARI",
-      source_url: "https://github.com/citybaseinc/ex_ari",
+      source_url: "https://github.com/Amtelco-Software/ex_ari",
       elixirc_paths: elixirc_paths(Mix.env()),
       test_coverage: [tool: ExCoveralls],
       deps: deps(),
