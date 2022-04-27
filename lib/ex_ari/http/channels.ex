@@ -115,7 +115,7 @@ defmodule ARI.HTTP.Channels do
         Allowed values: normal, busy, congestion, no_answer, timeout, rejected, unallocated, normal_unspecified, number_incomplete, codec_mismatch, interworking, failure, answered_elsewhere
   """
   @spec hangup(String.t(), map()) :: Response.t()
-  def hangup(id, payload) do
+  def hangup(id, payload \\ %{}) do
     GenServer.call(__MODULE__, {:hangup, id, payload})
   end
 
@@ -131,7 +131,7 @@ defmodule ARI.HTTP.Channels do
       label: The dialplan label to continue to - will supercede 'priority' if both are provided
   """
   @spec continue_in_dialplan(String.t(), map()) :: Response.t()
-  def continue_in_dialplan(id, payload) do
+  def continue_in_dialplan(id, payload \\ %{}) do
     GenServer.call(__MODULE__, {:continue_in_dialplan, id, payload})
   end
 
@@ -223,7 +223,7 @@ defmodule ARI.HTTP.Channels do
         Allowed values: both, in, out
   """
   @spec mute(String.t(), map()) :: Response.t()
-  def mute(id, payload) do
+  def mute(id, payload \\ %{}) do
     GenServer.call(__MODULE__, {:mute, id, payload})
   end
 
@@ -238,7 +238,7 @@ defmodule ARI.HTTP.Channels do
         Allowed values: both, in, out
   """
   @spec unmute(String.t(), map()) :: Response.t()
-  def unmute(id, payload) do
+  def unmute(id, payload \\ %{}) do
     GenServer.call(__MODULE__, {:unmute, id, payload})
   end
 
@@ -275,7 +275,7 @@ defmodule ARI.HTTP.Channels do
       mohClass: Music on hold class to use
   """
   @spec start_moh(String.t(), map()) :: Response.t()
-  def start_moh(id, payload) do
+  def start_moh(id, payload \\ %{}) do
     GenServer.call(__MODULE__, {:start_moh, id, payload})
   end
 
@@ -425,7 +425,7 @@ defmodule ARI.HTTP.Channels do
         Allowed range: Min: 0, Max: None
   """
   @spec dial(String.t(), map()) :: Response.t()
-  def dial(id, payload) do
+  def dial(id, payload \\ %{}) do
     GenServer.call(__MODULE__, {:dial, id, payload})
   end
 
@@ -448,7 +448,7 @@ defmodule ARI.HTTP.Channels do
   ## Parameters
     id: String (UTF-8) - channel id
     payload: map of the parameters and values to pass to Asterisk
-      app: (required) Stasis Application the snooping channel (created) is placed into
+      app: (required) Stasis Application the external media channel (created) is placed into
       external_host: (required) Hostname/ip:port of external host
       encapsulation: Payload of encapsulation protocol
         Default: rtp
