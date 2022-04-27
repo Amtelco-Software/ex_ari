@@ -293,5 +293,4 @@ defmodule ARI.HTTP.Asterisk do
     {:noreply,
      request("DELETE", "/config/dynamic/#{config_class}/#{obj_type}/#{id}", from, state)}
   end
-
 end
