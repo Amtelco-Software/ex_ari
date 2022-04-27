@@ -1,12 +1,12 @@
 defmodule ARI.Stasis do
   @moduledoc """
-  The `ARI.Stasis` module is used to register a [Stasis](https://wiki.asterisk.org/wiki/pages/viewpage.action?pageId=29395573#AsteriskRESTInterface(ARI)-WhatisStasis?) application with the Asterisk server. It connects to the Asterisk server using a websocket. 
+  The `ARI.Stasis` module is used to register a [Stasis](https://wiki.asterisk.org/wiki/pages/viewpage.action?pageId=29395573#AsteriskRESTInterface(ARI)-WhatisStasis?) application with the Asterisk server. It connects to the Asterisk server using a websocket.
 
   The host, username and password are configured in the Asterisk configuration file [ari.conf](https://wiki.asterisk.org/wiki/display/AST/Asterisk+Configuration+for+ARI). The name that is registered is provided in the `t:ARI.Stasis.app_config/0` as `name`.
 
   Once registered it receives all events for all [channels](https://wiki.asterisk.org/wiki/display/AST/Channels) associated with a Stasis application. Here's an example application, you can see the Stasis app configured for the built-in `ARI.Router` application as well as a custom application, in the list of children.
 
-  ### Example 
+  ### Example
       defmodule ExARIExample.Application do
           use Application
           alias ARI.{ChannelRegistrar, Configurator, HTTP, Stasis}
@@ -24,8 +24,8 @@ defmodule ARI.Stasis do
             config_module = ExARIExample.Config
             client_config = %{name: "ex_ari", module: ExARIExample.Client}
             router_config = %{
-              name: "router", 
-              module: ARI.Router, 
+              name: "router",
+              module: ARI.Router,
               extensions: %{
                 "ex_ari" => "ex_ari",
                 "+15555550101" => "ex_ari"
@@ -52,7 +52,7 @@ defmodule ARI.Stasis do
 
   For the full example check out the [ex_ari_example application](https://github.com/citybaseinc/ex_ari_example), which will get you up and running with making calls on your local machine.
 
-  There are two very important events that `ARI.Stasis` receives that drive an `ex_ari` application `StasisStart` and `StasisEnd`. 
+  There are two very important events that `ARI.Stasis` receives that drive an `ex_ari` application `StasisStart` and `StasisEnd`.
 
   ## StasisStart
 
@@ -137,7 +137,7 @@ defmodule ARI.Stasis do
   end
 
   @impl WebSockex
-  def handle_connect(_conn, state) do
+  def conn(_conn, state) do
     state = %State{
       state
       | connected: true,
