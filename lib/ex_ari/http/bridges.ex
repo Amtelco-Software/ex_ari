@@ -136,7 +136,7 @@ defmodule ARI.HTTP.Bridges do
       moh_class: Music On Hold Class
   """
   @spec start_moh(String.t(), map()) :: Response.t()
-  def start_moh(id, payload) do
+  def start_moh(id, payload \\ %{}) do
     GenServer.call(__MODULE__, {:start_moh, id, payload})
   end
 
