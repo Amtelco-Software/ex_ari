@@ -136,7 +136,6 @@ defmodule ARI.Stasis do
     )
   end
 
-  @impl WebSockex
   def conn(_conn, state) do
     state = %State{
       state
@@ -216,6 +215,36 @@ defmodule ARI.Stasis do
     handle_stasis_end(id, false, state)
   end
 
+  defp handle_payload(%{type: "BridgeCreated", bridge: %{id: _}} = payload, state) do
+    debug("Received Bridge Created #{inspect(payload)}")
+    {:ok, state}
+  end
+
+  defp handle_payload(%{type: "BridgeDestroyed", bridge: %{id: _}} = payload, state) do
+    debug("Received Bridge Destroyed #{inspect(payload)}")
+    {:ok, state}
+  end
+
+  defp handle_payload(%{type: "BridgeMerged", bridge: %{id: _}} = payload, state) do
+    debug("Received Bridge Merged #{inspect(payload)}")
+    {:ok, state}
+  end
+
+  defp handle_payload(%{type: "BridgeVideoSourceChanged", bridge: %{id: _}} = payload, state) do
+    debug("Received Bridge Video Source Changed #{inspect(payload)}")
+    {:ok, state}
+  end
+
+  defp handle_payload(%{type: "ChannelEnteredBridge", bridge: %{id: _}, channel: %{id: _}} = payload, state) do
+    debug("Received Channel Entered Bridge #{inspect(payload)}")
+    {:ok, state}
+  end
+
+  defp handle_payload(%{type: "ChannelLeftBridge", bridge: %{id: _}} = payload, state) do
+    debug("Received Channel Left Bridge #{inspect(payload)}")
+    {:ok, state}
+  end
+
   defp handle_payload(%{type: "StasisEnd", channel: %{id: id}}, state) do
     debug("Received App Stasis End")
     handle_stasis_end(id, true, state)
@@ -242,7 +271,7 @@ defmodule ARI.Stasis do
   end
 
   defp handle_payload(%{channel: %{id: id}} = payload, state) do
-    debug("Received Event: #{inspect(payload)}")
+    debug("Received Channel Event: #{inspect(payload)}")
 
     id
     |> ChannelRegistrar.get_channel()
@@ -251,10 +280,16 @@ defmodule ARI.Stasis do
     {:ok, state}
   end
 
+  defp handle_payload(%{type: "Dial", peer: %{id: _, name: _, state: _}} = payload, state) do
+    debug("Received Dial Event (ignoring): #{inspect(payload)}")
+    {:ok, state}
+  end
+
   defp handle_payload(payload, state) do
     Logger.warn("Unhandled Payload: #{inspect(payload)}")
     {:ok, state}
   end
+
 
   @spec get_state(State.t(), String.t(), String.t(), list(), map(), map()) :: channel_state()
   defp get_state(state, id, number, args, start_event, app_state) do
