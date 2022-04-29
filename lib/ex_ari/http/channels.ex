@@ -108,11 +108,12 @@ defmodule ARI.HTTP.Channels do
 
   ## Parameters
     id: String (UTF-8) - channel id to hangup
-    payload: map of the parameters and values to pass to Asterisk
+    payload: map of the parameters and values to pass to Asterisk.
       reason_code: The reason code for hanging up the channel for detail use. Mutually exclusive with 'reason'.
         See detail hangup codes at here. https://wiki.asterisk.org/wiki/display/AST/Hangup+Cause+Mappings
       reason: Reason for hanging up the channel for simple use. Mutually exclusive with 'reason_code'.
         Allowed values: normal, busy, congestion, no_answer, timeout, rejected, unallocated, normal_unspecified, number_incomplete, codec_mismatch, interworking, failure, answered_elsewhere
+      NOTE: Asterisk does not support specifying both reason and reason_code, so only specify one!
   """
   @spec hangup(String.t(), map()) :: Response.t()
   def hangup(id, payload \\ %{}) do
@@ -446,7 +447,6 @@ defmodule ARI.HTTP.Channels do
   Create a channel to an External Media source/sink
 
   ## Parameters
-    id: String (UTF-8) - channel id
     payload: map of the parameters and values to pass to Asterisk
       app: (required) Stasis Application the external media channel (created) is placed into
       external_host: (required) Hostname/ip:port of external host
@@ -467,9 +467,10 @@ defmodule ARI.HTTP.Channels do
     variables: containers - The "variables" key in the body object holds variable key/value pairs to set on the channel on creation.
       Other keys in the body object are interpreted as query parameters. Ex. { "endpoint": "SIP/Alice", "variables": { "CALLERID(name)": "Alice" } }
   """
-  @spec external_media(String.t(), map(), %{variables: %{}}) :: Response.t()
-  def external_media(id, %{app: _, external_host: _, format: _} = payload, variables \\ %{variables: %{}}) do
-    GenServer.call(__MODULE__, {:external_media, id, payload, variables})
+  @spec external_media(map(), %{variables: %{}}) :: Response.t()
+  def external_media(%{app: _, external_host: _, format: _} = payload, variables \\ %{variables: %{}}) do
+    Logger.debug("Channels.external_media app=#{payload.app}, host=#{payload.external_host}, format=#{payload.format}")
+    GenServer.call(__MODULE__, {:external_media, payload, variables})
   end
 
   @impl true
@@ -614,7 +615,8 @@ defmodule ARI.HTTP.Channels do
   end
 
   @impl true
-  def handle_call({:external_media, id, payload, variables}, from, state) do
-    {:noreply, request("POST", "/#{id}/external_media?#{encode_params(payload)}", from, state, variables)}
+  def handle_call({:external_media, payload, variables}, from, state) do
+    Logger.debug("Channels handle_call :external_media app=#{payload.app}, host=#{payload.external_host}, format=#{payload.format}, transport=#{payload.transport} with variables")
+    {:noreply, request("POST", "/externalMedia?#{encode_params(payload)}", from, state, variables)}
   end
 end
