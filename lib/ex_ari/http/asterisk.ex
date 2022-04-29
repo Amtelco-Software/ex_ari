@@ -64,7 +64,7 @@ defmodule ARI.HTTP.Asterisk do
         Ex. [ { "attribute": "directmedia", "value": "false" } ]
   """
   @spec put_config(String.t(), String.t(), String.t(), map()) :: Response.t()
-  def put_config(config_class, obj_type, id, body \\ %{}) do
+  def put_config(config_class, obj_type, id, body) do
     GenServer.call(__MODULE__, {:put_config, config_class, obj_type, id, body})
   end
 
