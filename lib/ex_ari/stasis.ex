@@ -245,7 +245,7 @@ defmodule ARI.Stasis do
     {:ok, state}
   end
 
-  defp handle_payload(%{type: "StasisEnd", channel: %{id: id}}, state) do
+  defp handle_payload(%{type: "StasisEnd", channel: %{id: id}} = payload, state) do
     debug("Received App Stasis End #{inspect(payload)}")
     handle_stasis_end(id, true, state)
   end
